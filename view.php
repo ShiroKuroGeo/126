@@ -38,7 +38,7 @@ $conn = mysqli_connect("localhost", "root", "", "126motorparts")
         </div>
       </div>
     </div>
-    <div class="table-responsive bg-white rounded">
+    <div class="table-responsive bg-white rounded" style="overflow: auto; height: 430px">
       <div class="text-right mt-2 mx-2">
         <input type="text" id="getProd" class="py-2 px-2 border border-primary rounded" placeholder="Search Product">
       </div>

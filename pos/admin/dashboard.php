@@ -160,7 +160,7 @@ require_once('partials/_analytics.php');
                 </div>
               </div>
             </div>
-            <div class="table-responsive">
+            <div class="table-responsive" style="overflow: auto; height: 430px">
               <table class="table align-items-center table-flush">
                 <thead class="thead-light">
                   <tr>
@@ -218,7 +218,7 @@ require_once('partials/_analytics.php');
                 </div>
               </div>
             </div>
-            <div class="table-responsive">
+            <div class="table-responsive" style="overflow: auto; height: 430px">
               <table class="table align-items-center table-flush">
                 <thead class="thead-light">
                   <tr>

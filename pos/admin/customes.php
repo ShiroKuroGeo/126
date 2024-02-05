@@ -66,7 +66,7 @@ require_once('partials/_head.php');
               
             </div>
 
-            <div class="table-responsive">
+            <div class="table-responsive" style="overflow: auto; height: 430px">
               <table class="table align-items-center table-flush">
                 <thead class="thead-light">
                   <tr>

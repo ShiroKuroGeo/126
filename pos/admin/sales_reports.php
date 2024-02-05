@@ -148,7 +148,7 @@ require_once('partials/_analytics.php');
                       <a href="sales_reports_selecteddate.php?date=<?php echo date('Y-m', strtotime('last month')); ?>" class="btn btn-sm btn-primary px-4 text-white"><?php echo date('F', strtotime('last month')); ?></a>
                       <a href="sales_reports_selecteddate.php?date=<?php echo date('Y-m'); ?>" class="btn btn-sm btn-primary px-4 text-white"><?php echo date('F'); ?></a>
                     </div>
-                    <div class="table-responsive">
+                    <div class="table-responsive" style="overflow: auto; height: 430px">
                       <table class="table align-items-center table-flush">
                         <thead class="thead-light">
                           <tr>
