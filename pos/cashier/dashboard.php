@@ -137,7 +137,7 @@ require_once('partials/_analytics.php');
                 </thead>
                 <tbody>
                   <?php
-                  $ret = "SELECT * FROM  rpos_orders ORDER BY `rpos_orders`.`created_at` DESC LIMIT 7 ";
+                  $ret = "SELECT * FROM rpos_orders ORDER BY `rpos_orders`.`created_at` DESC LIMIT 7 ";
                   $stmt = $mysqli->prepare($ret);
                   $stmt->execute();
                   $res = $stmt->get_result();
@@ -153,7 +153,7 @@ require_once('partials/_analytics.php');
                       <td class="text-success"><?php echo $order->prod_qty; ?></td>
                       <td>₱<?php echo $total; ?></td>
                       <td><?php if ($order->order_status == '') {
-                            echo "<span class='badge badge-danger'>Not Paid</span>";
+                            echo "<span class='badge badge-danger'>Not Paid</span> ";
                           } else {
                             echo "<span class='badge badge-success'>$order->order_status</span>";
                           } ?></td>
@@ -192,8 +192,10 @@ require_once('partials/_analytics.php');
                 </thead>
                 <tbody>
                   <?php
-                  $ret = "SELECT * FROM   rpos_payments   ORDER BY `rpos_payments`.`created_at` DESC LIMIT 7 ";
+                  $staffId = $_SESSION['staff_id'];
+                  $ret = "SELECT * FROM rpos_payments WHERE `staff_id` = ? ORDER BY `rpos_payments`.`created_at` DESC LIMIT 7 ";
                   $stmt = $mysqli->prepare($ret);
+                  $bind = $stmt->bind_param('s', $staffId);
                   $stmt->execute();
                   $res = $stmt->get_result();
                   while ($payment = $res->fetch_object()) {
