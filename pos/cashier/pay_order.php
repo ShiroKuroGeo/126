@@ -18,20 +18,30 @@ if (isset($_POST['pay'])) {
     $pay_amt  = $_POST['pay_amt'];
     $pay_method = $_POST['pay_method'];
     $pay_id = $_POST['pay_id'];
-    $staff_id = $_SESSION['staff_id'];;
+    $staff_id = $_SESSION['staff_id'];
+    $customerNames = $_GET['customerName'];
+    $prodid = $_GET['prodid'];
+    $proname = $_GET['proname'];
 
     $order_status = $_GET['order_status'];
 
+    $ret = "SELECT * FROM rpos_payments WHERE order_code ='$order_code' ";
+    $stmt = $mysqli->prepare($ret);
+    $stmt->execute();
+    $res = $stmt->get_result();
+    while ($order = $res->fetch_object()) {
+      $pqty = $order->quantity;
+    }
     //Insert Captured information to a database table
-    $postQuery = "INSERT INTO rpos_payments (pay_id, pay_code, order_code, customer_id, pay_amt, pay_method, staff_id) VALUES(?,?,?,?,?,?,?)";
-    $upQry = "UPDATE rpos_orders SET order_status = ? WHERE order_code =?";
+    $postQuery = "INSERT INTO `rpos_orders`(`order_id`, `order_code`, `customer_id`, `customer_name`, `prod_id`, `prod_name`, `prod_price`, `prod_qty`, `order_status`) VALUES (?,?,?,?,?,?,?,?,?)";
+    $upQry = "UPDATE rpos_payments SET staff_id = ? WHERE order_code = ?";
 
     $postStmt = $mysqli->prepare($postQuery);
     $upStmt = $mysqli->prepare($upQry);
     //bind paramaters
 
-    $rc = $postStmt->bind_param('sssssss', $pay_id, $pay_code, $order_code, $customer_id, $pay_amt, $pay_method, $staff_id);
-    $rc = $upStmt->bind_param('ss', $order_status, $order_code);
+    $rc = $postStmt->bind_param('sssssssss', $pay_id, $order_code, $customer_id, $customerNames, $prodid, $proname, $pay_amt, $pqty, $order_status);
+    $rc = $upStmt->bind_param('ss', $staff_id, $order_code);
 
     $postStmt->execute();
     $upStmt->execute();
@@ -57,15 +67,15 @@ require_once('partials/_head.php');
     <?php
     require_once('partials/_topnav.php');
 
-
     $order_code = $_GET['order_code'];
-    $ret = "SELECT * FROM  rpos_orders WHERE order_code ='$order_code' ";
+    $ret = "SELECT * FROM rpos_payments WHERE order_code ='$order_code' ";
     $stmt = $mysqli->prepare($ret);
     $stmt->execute();
     $res = $stmt->get_result();
     while ($order = $res->fetch_object()) {
-      $total = ($order->prod_price * $order->prod_qty);
-
+      $price = $order->cart_price;
+      $paymentMethod = $order->pay_method;
+      $pqty = $order->quantity;
     ?>
 
       <!-- Header -->
@@ -83,7 +93,7 @@ require_once('partials/_head.php');
           <div class="col">
             <div class="card shadow">
               <div class="card-header border-0">
-                <h3>Please Fill All Fields</h3>
+                <h3>Please Fill All Fields </h3>
               </div>
               <div class="card-body">
                 <form method="POST" enctype="multipart/form-data">
@@ -95,7 +105,7 @@ require_once('partials/_head.php');
                       <option value="">Select Cashier Name</option>
                       <?php
                       //Load All Customers
-                      $ret = "SELECT * FROM  rpos_staff ";
+                      $ret = "SELECT * FROM rpos_staff ";
                       $stmt = $mysqli->prepare($ret);
                       $stmt->execute();
                       $res = $stmt->get_result();
@@ -120,13 +130,12 @@ require_once('partials/_head.php');
                   <div class="form-row">
                     <div class="col-md-6">
                       <label>Amount (₱)</label>
-                      <input type="text" name="pay_amt" readonly value="<?php echo $total; ?>" class="form-control">
+                      <input type="text" name="pay_amt" readonly value="<?php echo $price; ?>" class="form-control">
                     </div>
                     <div class="col-md-6">
                       <label>Payment Method</label>
-                      <select class="form-control" name="pay_method">
-                        <option selected>Cash</option>
-                        <option>Gcash</option>
+                      <select class="form-control" name="pay_method" readonly value="<?php echo $paymentMethod;?>">
+                        <option selected value="<?php echo $paymentMethod;?>"><?php echo $paymentMethod;?></option>
                       </select>
                     </div>
                   </div>

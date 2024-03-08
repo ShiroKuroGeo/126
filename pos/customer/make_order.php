@@ -22,6 +22,8 @@ if (isset($_POST['make'])) {
         $customer_id = $_SESSION['customer_id'];
         $customer_name = $_POST['customer_name'];
         $prod_id = $_GET['prod_id'];
+        $customer_name = $_GET['customer_name'];
+        $cart_id = $_GET['cart_id'];
         $prod_name = $_GET['prod_name'];
         $prod_price = $_GET['prod_price'];
         $prod_qty = $_POST['prod_qty'];
@@ -36,6 +38,11 @@ if (isset($_POST['make'])) {
         $updateNew = $mysqli->prepare($update);
         $updateQty = $updateNew->bind_param('ss', $prod_qty, $prod_id);
         $updateNew->execute();
+
+        $delete = 'DELETE FROM `rpos_cart` WHERE cart_id = ?';
+        $deleteNew = $mysqli->prepare($delete);
+        $deleteQty = $deleteNew->bind_param('s', $cart_id);
+        $deleteNew->execute();
 
         if ($postStmt && $updateNew) {
             $success = "Order Updated";
@@ -110,7 +117,7 @@ require_once('partials/_head.php');
                                         <?php
 
                                         $customer_id = $_SESSION['customer_id'];
-                                        $ret = "SELECT * FROM  rpos_customers WHERE customer_id = '$customer_id' ";
+                                        $ret = "SELECT * FROM rpos_customers WHERE customer_id = '$customer_id' ";
                                         $stmt = $mysqli->prepare($ret);
                                         $stmt->execute();
                                         $res = $stmt->get_result();
@@ -128,7 +135,7 @@ require_once('partials/_head.php');
                                 <hr>
                                 <?php
                                 $prod_id = $_GET['prod_id'];
-                                $ret = "SELECT * FROM  rpos_products WHERE prod_id = '$prod_id'";
+                                $ret = "SELECT * FROM rpos_cart WHERE prod_id = '$prod_id'";
                                 $stmt = $mysqli->prepare($ret);
                                 $stmt->execute();
                                 $res = $stmt->get_result();
@@ -145,13 +152,13 @@ require_once('partials/_head.php');
                                         </div>
                                         <div class="col-md-4">
                                             <label>Product Quantity</label>
-                                            <input type="text" name="prod_qty" class="form-control" value="1">
+                                            <input type="text" name="prod_qty" class="form-control" value="<?php echo $prod->prod_qty; ?>">
                                         </div>
                                     </div>
                                     <br>
                                     <div class="form-row">
                                         <div class="col-md-6">
-                                            <input type="submit" name="make" value="Make Order" class="btn btn-success" value="" <?php echo $prod->prod_quantity == null ? 'disabled' : ''; ?>>
+                                            <input type="submit" name="make" value="Make Order" class="btn btn-success" value="" <?php echo $prod->prod_qty == null ? 'disabled' : ''; ?>>
                                         </div>
                                     </div>
                                 <?php } ?>

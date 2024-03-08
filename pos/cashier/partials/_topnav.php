@@ -6,7 +6,7 @@ $stmt = $mysqli->prepare($ret);
 $stmt->execute();
 $res = $stmt->get_result();
 while ($staff = $res->fetch_object()) {
-
+$staffname = $staff->staff_name;
 ?>
     <nav class="navbar navbar-top navbar-expand-md navbar-dark" id="navbar-main">
         <div class="container-fluid">

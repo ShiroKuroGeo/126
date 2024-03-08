@@ -6,7 +6,7 @@ check_login();
 //Cancel Order
 if (isset($_GET['cancel'])) {
     $id = $_GET['cancel'];
-    $adn = "DELETE FROM  rpos_orders  WHERE  order_id = ?";
+    $adn = "DELETE FROM rpos_orders  WHERE  order_id = ?";
     $stmt = $mysqli->prepare($adn);
     $stmt->bind_param('s', $id);
     $stmt->execute();
@@ -56,33 +56,32 @@ require_once('partials/_head.php');
                                 <thead class="thead-light">
                                     <tr>
                                         <th scope="col">Code</th>
-                                        <th scope="col">Customer</th>
-                                        <th scope="col">Product</th>
-                                        <th scope="col">Qty</th>
+                                        <th scope="col">Customer Id</th>
+                                        <th scope="col">Payment Method</th>
+                                        <th scope="col">Quantity</th>
+                                        <th scope="col">Price</th>
                                         <th scope="col">Total Price</th>
-                                        <th scope="col">Date</th>
                                         <th scope="col">Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <?php
-                                    $ret = "SELECT * FROM  rpos_orders WHERE order_status =''  ORDER BY `rpos_orders`.`created_at` DESC  ";
+                                    $ret = "SELECT * FROM rpos_payments ORDER BY created_at DESC  ";
                                     $stmt = $mysqli->prepare($ret);
                                     $stmt->execute();
                                     $res = $stmt->get_result();
                                     while ($order = $res->fetch_object()) {
-                                        $total = ($order->prod_price * $order->prod_qty);
-
+                                        $total = $order->pay_amt;
                                     ?>
                                         <tr>
                                             <th class="text-success" scope="row"><?php echo $order->order_code; ?></th>
-                                            <td><?php echo $order->customer_name; ?></td>
-                                            <td><?php echo $order->prod_name; ?></td>
-                                            <td><?php echo $order->prod_qty; ?></td>
-                                            <td>₱ <?php echo $total; ?></td>
-                                            <td><?php echo date('d/M/Y g:i', strtotime($order->created_at)); ?></td>
+                                            <td><?php echo $order->customer_id; ?></td>
+                                            <td><?php echo $order->pay_method; ?></td>
+                                            <td><?php echo $order->quantity; ?></td>
+                                            <td><?php echo $order->cart_price; ?></td>
+                                            <td><?php echo $order->pay_amt; ?></td>
                                             <td>
-                                                <a href="pay_order.php?order_code=<?php echo $order->order_code;?>&customer_id=<?php echo $order->customer_id;?>&order_status=Paid">
+                                                <a href="pay_order.php?proname=<?php echo $order->prod_name?>&prodid=<?php echo $order->prod_id?>&customerName=<?php echo $order->customer_name; ?>&order_code=<?php echo $order->order_code;?>&customer_id=<?php echo $order->customer_id;?>&order_status=Paid">
                                                     <button class="btn btn-sm btn-success">
                                                         <i class="fas fa-handshake"></i>
                                                         Pay Order

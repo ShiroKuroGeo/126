@@ -24,7 +24,7 @@ if (isset($_POST['delete_all'])) {
 
     $cart_id = mysqli_escape_string($con, $_POST['delete_all']);
     // Execute the delete query
-    $sql = "DELETE FROM rpos_cart WHERE cart_id='$cart_id'";
+    $sql = "DELETE FROM rpos_cart ";
     if ($con->query($sql) === TRUE) {
         echo "All records deleted successfully";
     } else {
@@ -84,17 +84,27 @@ require_once('partials/_head.php');
 
                                     <?php
                                     $customer_id = $_SESSION['customer_id'];
-                                    $ret = "SELECT * FROM rpos_cart WHERE cart_status ='' AND customer_id = '$customer_id'  ORDER BY `rpos_cart`.`created_at` DESC  ";
+                                    $ret = "SELECT * FROM rpos_cart WHERE cart_status ='' AND customer_id = '$customer_id' ORDER BY `rpos_cart`.`created_at` DESC  ";
                                     $stmt = $mysqli->prepare($ret);
                                     $stmt->execute();
                                     $res = $stmt->get_result();
 
-                                    $overallTotal = 0;
-
+                                    $overallTot = 0;
+                                    $customer_name = null;
+                                    $customerCode = array();
+                                    $customerPrice = array();
+                                    $customerQty = array();
+                                    $productname = array();
+                                    $productIds = array();
                                     while ($cart = $res->fetch_object()) {
                                         $productTotal = $cart->prod_qty * $cart->prod_price;
-                                        $overallTotal += $productTotal;
-
+                                        $overallTot += $productTotal;
+                                        $customer_name = $cart->customer_name;
+                                        $customerCodes[] = $cart->cart_code;
+                                        $customerPrice[] = $cart->prod_price;
+                                        $customerQty[] = $cart->prod_qty;
+                                        $productname[] = $cart->prod_name;
+                                        $productIds[] = $cart->prod_id;
                                     ?>
                                         <tr>
 
@@ -105,7 +115,7 @@ require_once('partials/_head.php');
                                             <td><?php echo $cart->prod_qty; ?></td>
                                             <td>₱ <?php echo $cart->prod_price * $cart->prod_qty; ?></td>
                                             <td>
-                                                <a href="make_order.php?prod_id=<?php echo $cart->prod_id; ?>&prod_name=<?php echo $cart->prod_name; ?>&prod_price=<?php echo $cart->prod_price; ?>">
+                                                <a href="make_order.php?cart_id=<?php echo $cart->cart_id?>&prod_id=<?php echo $cart->prod_id; ?>&prod_name=<?php echo $cart->prod_name; ?>&prod_price=<?php echo $cart->prod_price; ?>">
                                                     <button class="btn btn-sm btn-primary">
                                                         <i class="fas fa-cart-plus"></i>
                                                         Place Order
@@ -122,9 +132,9 @@ require_once('partials/_head.php');
                                     <tr>
                                         <td colspan="4"></td>
                                         <td><strong>Total Price</strong></td>
-                                        <td><b>₱ <?php echo $overallTotal ?></b></td>
+                                        <td><b>₱ <?php echo $overallTot ?></b></td>
                                         <td>
-                                            <a href="">
+                                            <a href="pay_order.php?productname=<?php echo implode(',', $productname); ?>&productid=<?php echo implode(',', $productIds); ?>&cartqrt=<?php echo implode(',', $customerQty); ?>&cartprice=<?php echo implode(',', $customerPrice); ?>&customerId=<?php echo $_SESSION['customer_id'];?>&orderStatus=&customer_name=<?php echo $customer_name?>&customerCodes=<?php echo implode(',', $customerCodes); ?>">
                                                 <button class="btn btn-sm btn-success ">
                                                     <i class="fas fa-shopping-cart"></i>
                                                     Check Out

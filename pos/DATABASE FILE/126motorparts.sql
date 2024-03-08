@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 05, 2024 at 10:01 AM
--- Server version: 10.4.32-MariaDB
--- PHP Version: 8.2.12
+-- Generation Time: Mar 08, 2024 at 05:56 PM
+-- Server version: 10.4.28-MariaDB
+-- PHP Version: 8.2.4
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -61,14 +61,6 @@ CREATE TABLE `rpos_cart` (
   `created_at` timestamp(6) NOT NULL DEFAULT current_timestamp(6) ON UPDATE current_timestamp(6)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
---
--- Dumping data for table `rpos_cart`
---
-
-INSERT INTO `rpos_cart` (`cart_id`, `cart_code`, `customer_id`, `customer_name`, `prod_id`, `prod_name`, `prod_img`, `prod_price`, `prod_qty`, `cart_status`, `created_at`) VALUES
-('6c43806050', 'TNZP-7915', 'bef90fc73a5d', 'shiro', '35e6b9e396', 'Mags', '', '350', '2', '', '2024-01-30 09:35:01.901122'),
-('e3c18e63b6', 'TLQN-9803', 'bef90fc73a5d', 'shiro', '35e6b9e396', 'Mags', '', '350', '1', '', '2024-01-30 09:30:44.698591');
-
 -- --------------------------------------------------------
 
 --
@@ -117,15 +109,7 @@ CREATE TABLE `rpos_orders` (
 --
 
 INSERT INTO `rpos_orders` (`order_id`, `order_code`, `customer_id`, `customer_name`, `prod_id`, `prod_name`, `prod_price`, `prod_qty`, `order_status`, `created_at`) VALUES
-('0cda20b738', 'REFK-5416', '35135b319ce3', 'Kurisuti Yap', '35e6b9e396', 'Mags', '350', '1', 'Paid', '2024-02-05 03:23:37.080840'),
-('12f79d8382', 'QPCF-5083', '35135b319ce3', 'Kurisuti Yap', '9c927223b7', 'Shock', '200', '1', 'Paid', '2023-04-26 05:48:20.814688'),
-('9b4bd8791e', 'WQMZ-3148', '35135b319ce3', 'Kurisuti Yap', '35e6b9e396', 'Mags', '350', '10', 'Paid', '2024-02-05 03:18:22.526176'),
-('a1e8a6ea5b', 'NRBI-9341', '35135b319ce3', 'Kurisuti Yap', '9c927223b7', 'Shock', '200', '2', 'Paid', '2023-04-27 15:42:41.557202'),
-('a21e2a43c5', 'YBVK-7584', '99a17f4644a9', 'keth elden', 'fe111b20e2', 'tire hugger', '250', '1', 'Paid', '2023-12-22 18:22:32.726188'),
-('a42d12cbb8', 'FPQX-4812', '35135b319ce3', 'Kurisuti Yap', '9c927223b7', 'Shock', '200', '1', 'Paid', '2023-04-26 07:26:07.686251'),
-('c971c42851', 'UDAP-0981', 'bef90fc73a5d', 'shiro', '3e6d46832b', 'mini driving light', '700', '1', 'Paid', '2024-01-31 07:29:26.579230'),
-('e30a8a6a50', 'BHXP-8649', '35135b319ce3', 'Kurisuti Yap', '3e6d46832b', 'mini driving light', '700', '12', 'Paid', '2024-01-31 07:33:08.879108'),
-('e3d30838a9', 'PYJZ-1065', '35135b319ce3', 'Kurisuti Yap', '9c927223b7', 'Shock', '200', '1', 'Paid', '2023-04-26 06:03:51.029947');
+('2d1e3b', 'GYUF-3591', 'bef90fc73a5d', 'shiro', '2af246f1f4', 'tire', '1150', '1', 'Paid', '2024-03-08 16:35:49.313740');
 
 -- --------------------------------------------------------
 
@@ -160,10 +144,15 @@ CREATE TABLE `rpos_payments` (
   `pay_code` varchar(200) NOT NULL,
   `order_code` varchar(200) NOT NULL,
   `customer_id` varchar(200) NOT NULL,
+  `customer_name` varchar(125) NOT NULL,
+  `prod_id` varchar(125) NOT NULL,
+  `prod_name` varchar(125) NOT NULL,
   `staff_id` int(20) NOT NULL,
   `staff_name` varchar(200) NOT NULL,
   `pay_amt` varchar(200) NOT NULL,
   `pay_method` varchar(200) NOT NULL,
+  `quantity` int(11) NOT NULL,
+  `cart_price` int(11) NOT NULL,
   `created_at` timestamp(6) NOT NULL DEFAULT current_timestamp(6) ON UPDATE current_timestamp(6)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
@@ -171,20 +160,9 @@ CREATE TABLE `rpos_payments` (
 -- Dumping data for table `rpos_payments`
 --
 
-INSERT INTO `rpos_payments` (`pay_id`, `pay_code`, `order_code`, `customer_id`, `staff_id`, `staff_name`, `pay_amt`, `pay_method`, `created_at`) VALUES
-('1d49d1', 'KXUPGALBOW', 'GBJR-8052', '35135b319ce3', 0, '', '350', 'Cash', '2023-12-22 17:35:44.628398'),
-('247fe2', 'H19GBEFUZC', 'YBVK-7584', '99a17f4644a9', 0, '', '250', 'Cash', '2023-12-22 18:22:32.724761'),
-('26978c', 'WNMU9HIJT6', 'PYJZ-1065', '35135b319ce3', 0, '', '200', 'Gcash', '2023-12-21 14:05:26.335142'),
-('2a5c05', 'FDRIPSUL6Y', 'WQMZ-3148', '35135b319ce3', 0, '', '3500', 'Gcash', '2024-02-05 03:18:22.437016'),
-('47f11a', 'AWAIYAWUND', 'FSGE-8269', '35135b319ce3', 0, '', '350', 'Cash', '2023-04-28 06:02:08.658562'),
-('4e71b6', 'TWZDU5VL1A', 'XSUB-3481', '35135b319ce3', 0, '', '1400', 'Cash', '2023-12-21 14:48:26.203758'),
-('5169d0', 'BCA2GHXKLJ', 'QPCF-5083', '35135b319ce3', 0, '', '200', 'Cash', '2023-04-26 05:48:20.687174'),
-('5290d7', 'AWERGDTHGF', 'FPQX-4812', '35135b319ce3', 0, '', '200', 'Cash', '2023-04-26 07:26:07.647092'),
-('b34fd4', '1ZV8SJ9WOP', 'XZGJ-8914', '35135b319ce3', 0, '', '700', 'Cash', '2023-12-21 16:23:41.840682'),
-('ba419b', 'NDTK5R2YUL', 'NRBI-9341', '35135b319ce3', 0, '', '400', 'Cash', '2023-04-27 15:42:41.482201'),
-('c00644', 'D1B457UJY2', 'REFK-5416', '35135b319ce3', 2, '', '350', 'Gcash', '2024-02-05 03:23:37.047734'),
-('c71b7f', 'L7JGOKQVCX', 'UDAP-0981', 'bef90fc73a5d', 0, '', '700', 'Cash', '2024-01-31 07:29:26.534644'),
-('eff7c4', 'IZTQBK3Y1N', 'BHXP-8649', '35135b319ce3', 0, '', '8400', 'Cash', '2024-01-31 07:33:08.862103');
+INSERT INTO `rpos_payments` (`pay_id`, `pay_code`, `order_code`, `customer_id`, `customer_name`, `prod_id`, `prod_name`, `staff_id`, `staff_name`, `pay_amt`, `pay_method`, `quantity`, `cart_price`, `created_at`) VALUES
+('GYUF-3591', 'DO4VTZ38KA', 'GYUF-3591', 'bef90fc73a5d', 'shiro', '2af246f1f4', 'tire', 2, '', '1350', 'Cash', 1, 1150, '2024-03-08 16:43:11.868281'),
+('QETX-0178', 'DO4VTZ38KA', 'QETX-0178', 'bef90fc73a5d', 'shiro', '9c927223b7', 'Shock', 2, '', '1350', 'Cash', 1, 200, '2024-03-08 16:41:39.453307');
 
 -- --------------------------------------------------------
 
@@ -210,13 +188,13 @@ CREATE TABLE `rpos_products` (
 --
 
 INSERT INTO `rpos_products` (`prod_id`, `prod_code`, `prod_name`, `prod_quantity`, `prod_img`, `prod_desc`, `prod_origpr`, `prod_revenue`, `prod_price`, `created_at`) VALUES
-('2af246f1f4', 'FYIG-6724', 'tire', '', 'tire.jpg', 'tire', '', '', '1150', '2023-12-22 18:14:38.838407'),
-('35e6b9e396', 'HRDW-3862', 'Mags', '5', 'mags.png', 'Motor mags', '', '', '350', '2024-02-05 03:15:15.515582'),
-('3e6d46832b', 'DSJH-3478', 'mini driving light', '', 'mdl.jpg', 'mini driving light heavy duty', '', '', '700', '2023-12-22 18:54:49.500839'),
-('7ef2ba95a5', 'IAYN-9421', 'handle grip', '', 'handle.jpg', 'handle grip', '', '', '90', '2023-12-22 18:14:16.481900'),
-('9c927223b7', 'GMHV-2593', 'Shock', '8', 'shock.jpg', 'Shock absorber', '', '', '200', '2023-04-26 05:44:34.727506'),
-('ea95e4df3c', 'RSFK-6584', 'brake', '', 'brake.jpg', 'brake', '', '', '120', '2023-12-22 18:13:43.852275'),
-('fe111b20e2', 'IYGN-4692', 'tire hugger', '', 'tirehugger.jpg', 'tire hugger for click', '', '', '250', '2023-12-22 18:15:06.973249');
+('2af246f1f4', 'FYIG-6724', 'tire', '10', 'tire.jpg', 'tire', '', '', '1150', '2024-03-08 13:36:37.450820'),
+('35e6b9e396', 'HRDW-3862', 'Mags', '5', 'mags.png', 'Motor mags', '', '', '350', '2024-03-08 14:13:51.773271'),
+('3e6d46832b', 'DSJH-3478', 'mini driving light', '9', 'mdl.jpg', 'mini driving light heavy duty', '', '', '700', '2024-03-08 13:51:21.115945'),
+('7ef2ba95a5', 'IAYN-9421', 'handle grip', '10', 'handle.jpg', 'handle grip', '', '', '90', '2024-03-08 13:36:37.450820'),
+('9c927223b7', 'GMHV-2593', 'Shock', '10', 'shock.jpg', 'Shock absorber', '', '', '200', '2024-03-08 13:36:37.450820'),
+('ea95e4df3c', 'RSFK-6584', 'brake', '10', 'brake.jpg', 'brake', '', '', '120', '2024-03-08 13:36:37.450820'),
+('fe111b20e2', 'IYGN-4692', 'tire hugger', '10', 'tirehugger.jpg', 'tire hugger for click', '', '', '250', '2024-03-08 13:36:37.450820');
 
 -- --------------------------------------------------------
 
