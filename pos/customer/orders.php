@@ -75,7 +75,7 @@ require_once('partials/_head.php');
                       <td><?php echo $prod->prod_desc; ?></td>
                       <td>₱ <?php echo $prod->prod_price; ?></td>
                       <td>
-                        <a href="make_order.php?prod_id=<?php echo $prod->prod_id; ?>&prod_name=<?php echo $prod->prod_name; ?>&prod_price=<?php echo $prod->prod_price; ?>">
+                        <a href="order_make.php?prod_id=<?php echo $prod->prod_id; ?>&prod_name=<?php echo $prod->prod_name; ?>&prod_price=<?php echo $prod->prod_price; ?>">
                           <button class="btn btn-sm btn-warning">
                             <i class="fas fa-cart-plus"></i>
                             Place Order

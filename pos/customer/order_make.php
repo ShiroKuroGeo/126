@@ -9,7 +9,7 @@ if (isset($_POST['make'])) {
     $prod_id = $_GET['prod_id'];
     $customer_id = $_SESSION['customer_id'];
 
-    $postQuery = "SELECT * FROM `rpos_orders` WHERE `prod_id` = ? AND `customer_id` = ?";
+    $postQuery = "SELECT * FROM rpos_orders WHERE prod_id = ? AND customer_id = ?";
     $postStmt = $mysqli->prepare($postQuery);
     $postStmt->bind_param('ss', $prod_id, $customer_id);
     $postStmt->execute();
@@ -28,18 +28,18 @@ if (isset($_POST['make'])) {
         $prod_price = $_GET['prod_price'];
         $prod_qty = $_POST['prod_qty'];
 
-        $postQuery = "UPDATE `rpos_orders` SET `order_code`= ?,`customer_id`=?,`customer_name`=?,`prod_id`=?,`prod_name`=?,`prod_price`=?,`prod_qty`= `prod_qty` + ?  WHERE `prod_id` = ? AND `customer_id` = ?";
+        $postQuery = "UPDATE rpos_orders SET order_code`= ?,customer_id`=?,`customer_name`=?,`prod_id`=?,`prod_name`=?,`prod_price`=?,`prod_qty`= prod_qty + ?  WHERE prod_id = ? AND customer_id = ?";
         $postStmt = $mysqli->prepare($postQuery);
         $rc = $postStmt->bind_param('sssssssss', $order_code, $customer_id, $customer_name, $prod_id, $prod_name, $prod_price, $prod_qty, $prod_id, $customer_id);
         $postStmt->execute();
 
         // Update the product quantity
-        $update = "UPDATE `rpos_products` SET `prod_quantity` = `prod_quantity` - ? WHERE `prod_id` = ?;";
+        $update = "UPDATE rpos_products SET prod_quantity = prod_quantity - ? WHERE prod_id = ?;";
         $updateNew = $mysqli->prepare($update);
         $updateQty = $updateNew->bind_param('ss', $prod_qty, $prod_id);
         $updateNew->execute();
 
-        $delete = 'DELETE FROM `rpos_cart` WHERE cart_id = ?';
+        $delete = 'DELETE FROM rpos_cart WHERE cart_id = ?';
         $deleteNew = $mysqli->prepare($delete);
         $deleteQty = $deleteNew->bind_param('s', $cart_id);
         $deleteNew->execute();
@@ -65,7 +65,7 @@ if (isset($_POST['make'])) {
         $rc = $postStmt->bind_param('ssssssss', $prod_qty, $order_id, $order_code, $customer_id, $customer_name, $prod_id, $prod_name, $prod_price);
         $postStmt->execute();
 
-        $update = "UPDATE `rpos_products` SET `prod_quantity` = `prod_quantity` - ? WHERE `prod_id` = ?;";
+        $update = "UPDATE rpos_products SET prod_quantity = prod_quantity - ? WHERE prod_id = ?;";
         $updateNew = $mysqli->prepare($update);
         $updateQty = $updateNew->bind_param('ss', $prod_qty, $prod_id);
         $updateNew->execute();
@@ -125,7 +125,7 @@ require_once('partials/_head.php');
                                         ?>
                                             <input class="form-control" readonly name="customer_name" value="<?php echo $cust->customer_name; ?>">
                                         <?php } ?>
-                                        <input type="hidden" name="order_id" value="<?php echo $orderid; ?>s" class="form-control">
+                                        <input type="hidden" name="order_id" value="<?php echo $orderid; ?>" class="form-control">
                                     </div>
                                     <div class="col-md-6">
                                         <label>Order Code</label>
@@ -135,7 +135,7 @@ require_once('partials/_head.php');
                                 <hr>
                                 <?php
                                 $prod_id = $_GET['prod_id'];
-                                $ret = "SELECT * FROM rpos_cart WHERE prod_id = '$prod_id'";
+                                $ret = "SELECT * FROM rpos_products WHERE prod_id = '$prod_id'";
                                 $stmt = $mysqli->prepare($ret);
                                 $stmt->execute();
                                 $res = $stmt->get_result();
@@ -152,13 +152,13 @@ require_once('partials/_head.php');
                                         </div>
                                         <div class="col-md-4">
                                             <label>Product Quantity</label>
-                                            <input type="text" name="prod_qty" class="form-control" value="<?php echo $prod->prod_qty; ?>">
+                                            <input type="text" name="prod_qty" class="form-control" value="1">
                                         </div>
                                     </div>
                                     <br>
                                     <div class="form-row">
                                         <div class="col-md-6">
-                                            <input type="submit" name="make" value="Make Order" class="btn btn-success" value="" <?php echo $prod->prod_qty == null ? 'disabled' : ''; ?>>
+                                            <input type="submit" name="make" value="Make Order" class="btn btn-success" value="" <?php echo $prod->prod_quantity == null ? 'disabled' : ''; ?>>
                                         </div>
                                     </div>
                                 <?php } ?>
